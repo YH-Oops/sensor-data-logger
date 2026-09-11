@@ -1,0 +1,7 @@
+# Python bytecode and cache files
+__pycache__/
+*.pyc
+
+# Files generated when the sensor analysis runs
+analysis.txt
+graphs/
