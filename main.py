@@ -2,11 +2,19 @@
 #            Sensor Data Logger
 # ==========================================
 
+import json
+
 from data_processing import calculate_average, find_max, find_min, load_sensor_data
 from visualization import create_sensor_graph
 
 
-def create_report(temperatures, lights, skipped_count, invalid_rows):
+def load_config():
+    """Load the configurable input and output paths."""
+    with open("config.json", encoding="utf-8") as file:
+        return json.load(file)
+
+
+def create_report(temperatures, lights, skipped_count, invalid_rows, analysis_file, graph_file):
     """Create the formatted report used by the terminal and analysis file."""
     total_readings = len(temperatures) + skipped_count
     report_lines = [
@@ -68,8 +76,8 @@ def create_report(temperatures, lights, skipped_count, invalid_rows):
         "----------------------------------------",
         "OUTPUT FILES",
         "----------------------------------------",
-        "Analysis report : analysis.txt",
-        "Graph           : graphs/sensor_data.png",
+        f"Analysis report : {analysis_file}",
+        f"Graph           : {graph_file}",
         "",
         "Analysis completed successfully.",
     ])
@@ -78,10 +86,17 @@ def create_report(temperatures, lights, skipped_count, invalid_rows):
 
 
 def main():
-    temperatures, lights, skipped_count, invalid_rows = load_sensor_data("sensor_data.csv")
-    report = create_report(temperatures, lights, skipped_count, invalid_rows)
+    config = load_config()
+    sensor_data_file = config["sensor_data_file"]
+    analysis_file = config["analysis_file"]
+    graph_file = config["graph_file"]
 
-    with open("analysis.txt", "w", encoding="utf-8") as file:
+    temperatures, lights, skipped_count, invalid_rows = load_sensor_data(sensor_data_file)
+    report = create_report(
+        temperatures, lights, skipped_count, invalid_rows, analysis_file, graph_file
+    )
+
+    with open(analysis_file, "w", encoding="utf-8") as file:
         file.write(report)
 
     print(report)
@@ -89,7 +104,7 @@ def main():
     if not temperatures:
         return
 
-    create_sensor_graph(temperatures, lights)
+    create_sensor_graph(temperatures, lights, graph_file)
 
 
 if __name__ == "__main__":

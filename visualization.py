@@ -5,9 +5,11 @@ import os
 import matplotlib.pyplot as plt
 
 
-def create_sensor_graph(temperatures, lights):
+def create_sensor_graph(temperatures, lights, graph_file):
     """Create and save a two-axis temperature and light graph."""
-    os.makedirs("graphs", exist_ok=True)
+    graph_directory = os.path.dirname(graph_file)
+    if graph_directory:
+        os.makedirs(graph_directory, exist_ok=True)
 
     reading_number = range(1, len(temperatures) + 1)
     fig, ax1 = plt.subplots()
@@ -25,5 +27,5 @@ def create_sensor_graph(temperatures, lights):
     ax1.legend(lines1 + lines2, labels1 + labels2)
 
     plt.title("Sensor Data")
-    plt.savefig("graphs/sensor_data.png", dpi=300, bbox_inches="tight")
+    plt.savefig(graph_file, dpi=300, bbox_inches="tight")
     plt.show()

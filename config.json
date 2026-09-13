@@ -1,0 +1,5 @@
+{
+  "sensor_data_file": "sensor_data.csv",
+  "analysis_file": "analysis.txt",
+  "graph_file": "graphs/sensor_data.png"
+}
